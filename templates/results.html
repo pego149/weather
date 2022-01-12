@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/styles/results.css">
+    <link rel="stylesheet" href="../static/leaflet/leaflet.css"/>
+</head>
+<body>
+<div class="weatherResults">
+    <h3>Weather in {{ location }}</h3>
+    <h2>{{ temp }}°C</h2>
+    <img src="http://openweathermap.org/img/wn/{{ icon }}.png" alt="{{ weather }}">
+    <h3>{{ weather }}</h3>
+    <h4>Feels like: {{ feels_like }}°C</h4>
+</div>
+<br>
+<table>
+    <tr>
+        {% for elem in forecast %}
+        <td>
+            <div class="weatherResults">
+                <h3>{{ elem['dt_txt'] }}</h3>
+                <h2>{{ elem['main']['temp'] }}°C</h2>
+                <img src="http://openweathermap.org/img/wn/{{elem['weather'][0]['icon']}}.png"
+                     alt="{{ elem['weather'][0]['main'] }}">
+                <h3>{{ elem["weather"][0]["main"] }}</h3>
+                <h4>Feels like: {{ elem["main"]["feels_like"] }}°C</h4>
+            </div>
+        </td>
+        {% endfor %}
+    </tr>
+</table>
+
+<div id="map"></div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="../static/leaflet/leaflet.js"></script>
+<script src="../static/leaflet/leaflet-src.js"></script>
+<script src="../static/leaflet/iconLayer.js"></script>
+<script>
+    var providers = {};
+
+    providers['OSM'] = {
+        layer: L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            maxZoom: 13,
+            attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        })
+    };
+
+    var map = L.map('map').setView([46.55472, 15.64667], 5);
+
+
+    var Temp = L.tileLayer('http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={{api_key}}', {
+            maxZoom: 13,
+            attribution: '&copy; Filip',
+            id: 'temp'
+        }),
+
+        Precipitation = L.tileLayer('http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid={{api_key}}', {
+            maxZoom: 13,
+            attribution: '&copy; Filip'
+        }),
+
+        Wind = L.tileLayer('http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid={{api_key}}', {
+            maxZoom: 13,
+            attribution: '&copy; Filip'
+        }),
+
+        Pressure = L.tileLayer('http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid={{api_key}}', {
+            maxZoom: 13,
+            attribution: '&copy; Filip'
+        }),
+
+
+        Clouds = L.tileLayer('http://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid={{api_key}}', {
+            maxZoom: 13,
+            attribution: '&copy; Filip'
+        });
+
+    Temp.addTo(map);
+
+    var overlays = {
+        "Temperature": Temp,
+        "Precipitation": Precipitation,
+        "Clouds": Clouds,
+        "Pressure": Pressure,
+        "Wind": Wind
+    };
+    L.control.layers(overlays, null, {collapsed: false}).addTo(map);
+
+    var layers = [];
+    for (var providerId in providers) {
+        layers.push(providers[providerId]);
+    }
+
+    L.control.iconLayers(layers).addTo(map);
+</script>
+
+</body>
+</html>

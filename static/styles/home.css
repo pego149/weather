@@ -1,0 +1,31 @@
+h2 {
+    padding-left: 20px;
+}
+
+.weatherText {
+    font-family: 'Lato', 'sans-serif';
+    font-size: 24px;
+}
+
+#weatherForm, #weatherFormMaribor, #weatherFormBratislava {
+    padding: 20px;
+}
+
+#weatherSubmit {
+    color: white;
+    background-color: #fa8072;
+    padding: 5px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#weatherSubmitMaribor, #weatherSubmitBratislava {
+    color: white;
+    background-color: #fa8072;
+    padding: 5px 20px;
+    border-radius: 5px;
+}
+
+#weatherSubmit:hover {
+    cursor: pointer;
+}
